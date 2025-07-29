@@ -1,27 +1,28 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { LoggerService } from '../../logger.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  constructor(private readonly logger: LoggerService) {}
+
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    // throw new UnauthorizedException();
-    // throw new Error('error in auth');
-    console.log(`Guard: checking authentication`);
+    this.logger.info('Guard: Checking authentication');
     const request = context.switchToHttp().getRequest();
     // const apiKey = request.header('x-api-key');
     const apiKey = request.headers['x-api-key'];
     if (apiKey !== 'SECRET') {
-      console.log(`Guard: failed authentication`);
+      this.logger.info(`Guard: failed authentication`);
       return false;
     }
-    console.log(`Guard: passed authentication`);
+    this.logger.info(`Guard: passed authentication`);
     return true;
   }
 }

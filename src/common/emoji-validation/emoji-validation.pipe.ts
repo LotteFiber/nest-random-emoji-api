@@ -3,21 +3,23 @@ import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 @Injectable()
 export class EmojiValidationPipe implements PipeTransform {
   transform(value: any) {
-    if (!value) {
-      return;
+    if (value === undefined || value === null || value === '') {
+      return undefined;
     }
-    if (isNaN(value)) {
+
+    const num = Number(value);
+    if (isNaN(num)) {
       throw new BadRequestException(
-        `Validation failed: ${value} is not a number`,
+        `Validation failed: ${num} is not a number`,
       );
     }
-    if (value < 0 || value > 9) {
+    if (num < 0 || num > 9) {
       throw new BadRequestException(
-        `Validation failed: ${value} is not within the range`,
+        `Validation failed: ${num} is not within the range`,
       );
     }
 
     console.log(`Pipe: validation passed`);
-    return Number(value);
+    return num;
   }
 }

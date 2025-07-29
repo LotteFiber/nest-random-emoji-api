@@ -1,10 +1,12 @@
 import { ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { createMock } from '@golevelup/ts-jest';
+import { LoggerService } from '../../logger.service';
+
 describe('AuthGuard', () => {
-  const authGuard = new AuthGuard();
+  const authGuard = new AuthGuard(new LoggerService());
   it('should be defined', () => {
-    expect(new AuthGuard()).toBeDefined();
+    expect(new AuthGuard(new LoggerService())).toBeDefined();
   });
 
   it(`should return true if there's a valid API key`, () => {
